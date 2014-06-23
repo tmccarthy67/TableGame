@@ -164,20 +164,6 @@ $(document).ready(function() {
     }
 
 // Test to see if ball collides with hippo
-//original
-//    function hitHippoBall (ball1,hippo1) {
-//      var retVal =false;
-//      var dxx = ball1.nextX - hippo1.nextX;
-//      var dyy = ball1.nextY - hippo1.nextY;
-//      var distance = (dxx * dxx + dyy * dyy);
-//      if (distance <= (ball1.radius + hippo1.radius) * (ball1.radius + hippo1.radius) ) {
-//        retVal = true;
-//console.log("hippo/ball collision")
-//      }
-//      return retVal;
-//    }
-
-// Test to see if ball collides with hippo
 //inverted results
     function hitHippoBall (ball1,hippo1) {
       var retVal =false;
@@ -335,48 +321,50 @@ console.log("hippo/ball collision")
     function collideBallsHippo(ball1, hippo1) {
         var ballsToEat = new Array ();
 
-
-      var dxz = ball1.nextX - hippo1.nextX;
-      var dyz = ball1.nextY - hippo1.nextY;
-      var collisionAngle = Math.atan2(dyz, dxz);
+      // var dxz = ball1.nextX - hippo1.nextX;
+      // var dyz = ball1.nextY - hippo1.nextY;
+      // var collisionAngle = Math.atan2(dyz, dxz);
 
       // Get velocities of each ball before collision
-      var speed1 = Math.sqrt(ball1.velocityX * ball1.velocityX + ball1.velocityY * ball1.velocityY);
-      var speed2 = 0;
+      // var speed1 = Math.sqrt(ball1.velocityX * ball1.velocityX + ball1.velocityY * ball1.velocityY);
+      // var speed2 = 0;
 
       // Get angles (in radians) for each ball, given current velocities
-     var direction1 = Math.atan2(ball1.velocityY, ball1.velocityX);
-     var direction2 = 0;
+     // var direction1 = Math.atan2(ball1.velocityY, ball1.velocityX);
+     // var direction2 = 0;
 
       // Rotate velocity vectors so we can plug into equation for conservation of momentum
-      var rotatedVelocityX1 = speed1 * Math.cos(direction1 - collisionAngle);
-      var rotatedVelocityY1 = speed1 * Math.sin(direction1 - collisionAngle);
-      var rotatedVelocityX2 = speed2 * Math.cos(direction2 - collisionAngle);
-      var rotatedVelocityY2 = speed2 * Math.sin(direction2 - collisionAngle);
+      // var rotatedVelocityX1 = speed1 * Math.cos(direction1 - collisionAngle);
+      // var rotatedVelocityY1 = speed1 * Math.sin(direction1 - collisionAngle);
+      // var rotatedVelocityX2 = speed2 * Math.cos(direction2 - collisionAngle);
+      // var rotatedVelocityY2 = speed2 * Math.sin(direction2 - collisionAngle);
 
       // Update actual velocities using conservation of momentum
       // Uses the following formulas:
       //     velocity1 = ((mass1 - mass2) * velocity1 + 2*mass2 * velocity2) / (mass1 + mass2)
       //     velocity2 = ((mass2 - mass1) * velocity2 + 2*mass1 * velocity1) / (mass1 + mass2)
       //
-      var finalVelocityX1 = ((ball1.mass - hippo1.mass) * rotatedVelocityX1 + (hippo1.mass + hippo1.mass) * rotatedVelocityX2) / (ball1.mass + hippo1.mass);
-      var finalVelocityX2 = ((ball1.mass + ball1.mass) * rotatedVelocityX1 + (hippo1.mass - ball1.mass) * rotatedVelocityX2) / (ball1.mass + hippo1.mass);
+      // var finalVelocityX1 = ((ball1.mass - hippo1.mass) * rotatedVelocityX1 + (hippo1.mass + hippo1.mass) * rotatedVelocityX2) / (ball1.mass + hippo1.mass);
+      // var finalVelocityX2 = ((ball1.mass + ball1.mass) * rotatedVelocityX1 + (hippo1.mass - ball1.mass) * rotatedVelocityX2) / (ball1.mass + hippo1.mass);
 
       // Y velocities remain constant
-      var finalVelocityY1 = rotatedVelocityY1;
-      var finalVelocityY2 = rotatedVelocityY2;
+      // var finalVelocityY1 = rotatedVelocityY1;
+      // var finalVelocityY2 = rotatedVelocityY2;
 
       // Rotate angles back again so the collision angle is preserved
-      ball1.velocityX = (Math.cos(collisionAngle) * finalVelocityX1 + Math.cos(collisionAngle + Math.PI/2) * finalVelocityY1) * 1.2;
-      ball1.velocityY = (Math.sin(collisionAngle) * finalVelocityX1 + Math.sin(collisionAngle + Math.PI/2) * finalVelocityY1) * 1.2;
-      hippo.velocityX = hippo.velocityX;
-      hippo.velocityY = hippo.velocityY;
+      ball1.velocityX = 0;
+      //(Math.cos(collisionAngle) * finalVelocityX1 + Math.cos(collisionAngle + Math.PI/2) * finalVelocityY1) * 1.2;
+      ball1.velocityY = 0;
+      // (Math.sin(collisionAngle) * finalVelocityX1 + Math.sin(collisionAngle + Math.PI/2) * finalVelocityY1) * 1.2;
+      // hippo.velocityX = hippo.velocityX;
+      // hippo.velocityY = hippo.velocityY;
 
       // Update nextX and nextY for both balls and Hippo so we can use them in render() or another collision
-      ball1.nextX += ball1.velocityX;
-      ball1.nextY += ball1.velocityY;
+      ball1.nextX = ball1.nextX;
+      ball1.nextY = ball1.nextY;
       hippo1.nextX = hippo1.nextX;
       hippo1.nextY = hippo1.nextY;
+
     }
 
 

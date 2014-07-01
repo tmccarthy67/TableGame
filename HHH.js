@@ -102,13 +102,8 @@ $(document).ready(function() {
       Hippos.push(tempHippo);
     }
 
-
-
-    // Find spots to place each ball so none start on top of each other
-    for (var i = 0; i < numBalls; i += 1) {
-      tempRadius = 5;
-      var placeOK = false;
-      while (!placeOK) {
+      var generateBall = function () {
+        tempRadius = 5;
         tempX = tempRadius * 3 + (Math.floor(Math.random() * ((theCanvas.width)/8)+(theCanvas.width)*7/16) - tempRadius * 3);
         tempY = tempRadius * 3 + (Math.floor(Math.random() * ((theCanvas.height)/8)+(theCanvas.height)*7/16) - tempRadius * 3);
         tempSpeed = 4;
@@ -131,12 +126,19 @@ $(document).ready(function() {
         };
         placeOK = canStartHere(tempBall);
       }
+
+    // Find spots to place each ball so none start on top of each other
+    for (var i = 0; i < numBalls; i += 1) {
+      tempRadius = 5;
+      var placeOK = false;
+      while (!placeOK) {
+        generateBall ();
+      }
       balls.push(tempBall);
     }
 
     // Drawing interval
     setInterval(drawScreen, 33);
-
 
     // Functions
     // Returns true if a ball can start at given location, otherwise returns false
@@ -152,7 +154,7 @@ $(document).ready(function() {
 
     // Circle collision test to see if two balls are touching
     // Uses nextX and nextY to test for collision before it occurs
-    function hitTestCircle(ball1, ball2) {
+    function hitTestCircle (ball1, ball2) {
       var retVal = false;
       var dx = ball1.nextX - ball2.nextX;
       var dy = ball1.nextY - ball2.nextY;
@@ -164,19 +166,16 @@ $(document).ready(function() {
     }
 
 // Test to see if ball collides with hippo
-//inverted results
-    function hitHippoBall (ball1,hippo1) {
+    var hitHippoBall  = function (ball1,hippo1) {
       var retVal =false;
       var dxx = ball1.nextX - hippo1.nextX;
       var dyy = ball1.nextY - hippo1.nextY;
       var distance = (dxx * dxx + dyy * dyy);
       if (distance <= (ball1.radius + hippo1.radius) * (ball1.radius + hippo1.radius) ) {
         retVal = true;
-console.log("hippo/ball collision")
       }
       return retVal;
     }
-
 
     // Loops through all the balls in the balls array and updates the nextX and nextY properties
     // with current x and y velocities for each ball
@@ -190,7 +189,7 @@ console.log("hippo/ball collision")
 
     // We track balls by their center, so we test for all collision by adding or subtracting
     // each ball's radius before testing for wall collision
-    function testWalls() {
+    function testWalls () {
       var ball;
       var testBall;
 
@@ -218,7 +217,7 @@ console.log("hippo/ball collision")
 
     // Tests whether any balls have hit each other.
     // Uses two next loops to iterate through the balls array and test each ball against every other ball.
-    function collide() {
+    function collide () {
       var ball;
       var testBall;
       for (var i = 0; i < balls.length; i += 1) {
@@ -231,12 +230,10 @@ console.log("hippo/ball collision")
         }
       }
     }
-// ******Edit this area using HitHippoBall instead of HitTestCircle********
-    //test to see if balls collide with hippo
-    // plan to modify the ball collide scripts here
+
     // Tests whether any balls have hit hippos.
     // Uses two next loops to iterate through the balls array and test each ball against every hippo.
-    function collideHippo() {
+    var collideHippo = function () {
       var ball;
       var Hippo;
       for (var i = 0; i < balls.length; i += 1) {
@@ -250,11 +247,9 @@ console.log("hippo/ball collision")
      }
    }
 
-
-
     // Updates properties of colliding balls so they appear to bounce off each other.
     // Uses nextX and nextY properties because we don't want to change where they are at the moment.
-    function collideBalls(ball1, ball2) {
+    function collideBalls (ball1, ball2) {
       var dx = ball1.nextX - ball2.nextX;
       var dy = ball1.nextY - ball2.nextY;
       var collisionAngle = Math.atan2(dy, dx);
@@ -298,79 +293,33 @@ console.log("hippo/ball collision")
       ball2.nextY += ball2.velocityY;
     }
 
-/*    //Removes the ball while maintaining the Hippo
-    //
-    function collideBallsHippo (ball1, hippo1) {
-      //add counter HERE
-      var ballRemove
-      var tempHippoCounter
-      tempHippocounter = tempHippoCounter ++;
-      ballRemove = ball1;
-      balls.splice(ballRemove,1);
-      hippo1.counter =tempHippoCounter;
-//console.log (hippo1.counter);
-
-    }
-*/
-
-
-
-
-    // Updates properties of colliding balls and Hippos so they appear to bounce off each other.
-    // Uses nextX and nextY properties because we don't want to change where they are at the moment.
-    function collideBallsHippo(ball1, hippo1) {
-        var ballsToEat = new Array ();
-
-      // var dxz = ball1.nextX - hippo1.nextX;
-      // var dyz = ball1.nextY - hippo1.nextY;
-      // var collisionAngle = Math.atan2(dyz, dxz);
-
-      // Get velocities of each ball before collision
-      // var speed1 = Math.sqrt(ball1.velocityX * ball1.velocityX + ball1.velocityY * ball1.velocityY);
-      // var speed2 = 0;
-
-      // Get angles (in radians) for each ball, given current velocities
-     // var direction1 = Math.atan2(ball1.velocityY, ball1.velocityX);
-     // var direction2 = 0;
-
-      // Rotate velocity vectors so we can plug into equation for conservation of momentum
-      // var rotatedVelocityX1 = speed1 * Math.cos(direction1 - collisionAngle);
-      // var rotatedVelocityY1 = speed1 * Math.sin(direction1 - collisionAngle);
-      // var rotatedVelocityX2 = speed2 * Math.cos(direction2 - collisionAngle);
-      // var rotatedVelocityY2 = speed2 * Math.sin(direction2 - collisionAngle);
-
-      // Update actual velocities using conservation of momentum
-      // Uses the following formulas:
-      //     velocity1 = ((mass1 - mass2) * velocity1 + 2*mass2 * velocity2) / (mass1 + mass2)
-      //     velocity2 = ((mass2 - mass1) * velocity2 + 2*mass1 * velocity1) / (mass1 + mass2)
-      //
-      // var finalVelocityX1 = ((ball1.mass - hippo1.mass) * rotatedVelocityX1 + (hippo1.mass + hippo1.mass) * rotatedVelocityX2) / (ball1.mass + hippo1.mass);
-      // var finalVelocityX2 = ((ball1.mass + ball1.mass) * rotatedVelocityX1 + (hippo1.mass - ball1.mass) * rotatedVelocityX2) / (ball1.mass + hippo1.mass);
-
-      // Y velocities remain constant
-      // var finalVelocityY1 = rotatedVelocityY1;
-      // var finalVelocityY2 = rotatedVelocityY2;
-
-      // Rotate angles back again so the collision angle is preserved
+    // Stops the balls.
+var collideBallsHippo = function (ball1, hippo1) {
       ball1.velocityX = 0;
-      //(Math.cos(collisionAngle) * finalVelocityX1 + Math.cos(collisionAngle + Math.PI/2) * finalVelocityY1) * 1.2;
       ball1.velocityY = 0;
-      // (Math.sin(collisionAngle) * finalVelocityX1 + Math.sin(collisionAngle + Math.PI/2) * finalVelocityY1) * 1.2;
-      // hippo.velocityX = hippo.velocityX;
-      // hippo.velocityY = hippo.velocityY;
-
-      // Update nextX and nextY for both balls and Hippo so we can use them in render() or another collision
-      ball1.nextX = ball1.nextX;
-      ball1.nextY = ball1.nextY;
-      hippo1.nextX = hippo1.nextX;
-      hippo1.nextY = hippo1.nextY;
-
+        removeBall (ball1);
     }
 
+ //remove ball
+var removeBall = function (ball1) {
+    var removeThisBall = balls.indexOf(ball1);
+      balls.splice(removeThisBall,1)
+      ballCount ()
+  }
 
+var ballCount = function () {
+   if (balls.length < numBalls) {
+        addBall ();
+    }
+ }
+
+var addBall = function () {
+    generateBall ();
+      balls.push(tempBall);
+}
 
     // Draws and updates each hippo
-    function renderHippo() {
+var renderHippo = function () {
       var Hippo;
       context.fillStyle = "#ff0000";
       for (var i = 0; i < Hippos.length; i += 1) {
@@ -385,10 +334,9 @@ console.log("hippo/ball collision")
     }
 
     // Draws and updates each ball
-    function renderBall() {
+function renderBall () {
       var ball;
       context.fillStyle = "#000000";
-//      console.log (balls.length);
       for (var i = 0; i < balls.length; i += 1) {
         ball = balls[i];
         ball.x = ball.nextX;
@@ -402,7 +350,7 @@ console.log("hippo/ball collision")
     }
 
     // Draws/updates the screen
-    function drawScreen() {
+function drawScreen () {
       // Reset canvas
       context.fillStyle = "#EEEEEE";
       context.fillRect(0, 0, theCanvas.width, theCanvas.height);

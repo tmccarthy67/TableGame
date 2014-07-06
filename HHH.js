@@ -14,14 +14,16 @@ $(document).ready(function() {
       // Grab the canvas and set the context to 2d
       var theCanvas = document.getElementById('canvasOne');
       var context = theCanvas.getContext("2d");
+      theCanvas.width = window.innerWidth;
+      theCanvas.height = window.innerHeight;
     }
 
-    // Variables
-    var numBalls = 25;  // number of balls 200
-//    var maxSize = 15;
-//    var minSize = 5;
-//    var maxSpeed = 20;
-//    maxSize + 5;
+// Variables
+    var width = window.innerWidth;
+    var numBalls = parseInt(width/30);
+    var maxSize = 15;
+    var minSize = 5;
+    var maxSpeed = maxSize + 5;
     var balls = new Array();
     var tempBall;
     var tempX;
@@ -34,10 +36,9 @@ $(document).ready(function() {
     var tempVelocityY;
 
     var numHippos = 8;  // number of Hippos
-//    var maxSizeHippo = 15;
-//    var minSizeHippo =5;
-//    var maxSpeedHippo = 20;
-    //maxSizeHippo + 5;
+    var maxSizeHippo = 15;
+    var minSizeHippo = 5;
+    var maxSpeedHippo = maxSizeHippo + 5;
     var Hippos = new Array();
     var tempHippo;
     var tempXHippo;
@@ -56,19 +57,18 @@ $(document).ready(function() {
     var tempXHippoBody;
     var tempYHippoBody;
 
-    // Find spots to place each hippo body
+// Find spots to place each hippo body
     for (var i = 0; i < numHippos; i++) {
-      tempRadiusHippoBody = 50;
+      tempRadiusHippoBody = parseInt(width/24);
       var placeOK = false;
       while (!placeOK) {
         tempXHippoBody = tempRadiusHippoBody * 3 + (Math.floor(Math.random() * theCanvas.width) - tempRadiusHippoBody * 3);
         tempYHippoBody = tempRadiusHippoBody * 3 + (Math.floor(Math.random() * theCanvas.height) - tempRadiusHippoBody * 3);
-        // tempSpeedHippo = 0;
-        // tempAngleHippo = 0;
-        // tempRadiansHippo = 0;
-        // tempVelocityXHippo = 0;
-        // tempVelocityYHippo = 0;
-        // tempHippoCounter = 0;
+        tempSpeedHippoBody = 0;
+        tempAngleHippoBody = 0;
+        tempRadiansHippoBody = 0;
+        tempVelocityXHippoBody = 0;
+        tempVelocityYHippoBody = 0;
 
         var HippoPositionZeroXBody = 0;
         var HippoPositionHalfXBody = theCanvas.width/2;
@@ -77,11 +77,13 @@ $(document).ready(function() {
         var HippoPositionHalfYBody = theCanvas.height/2;
         var HippoPositionFullYBody = theCanvas.height;
 
-        var HippoBodyX = [HippoPositionZeroXBody+20,HippoPositionZeroXBody,HippoPositionZeroXBody+20,HippoPositionHalfXBody,HippoPositionHalfXBody,HippoPositionFullXBody-20,HippoPositionFullXBody,HippoPositionFullXBody-20]
-        var HippoBodyY = [HippoPositionZeroYBody+20,HippoPositionHalfYBody,HippoPositionFullYBody-20,HippoPositionZeroYBody,HippoPositionFullYBody,HippoPositionZeroYBody+20,HippoPositionHalfYBody,HippoPositionFullYBody-20]
+        var bodyOffset = parseInt(width/48)
 
-          tempXHippoBody = HippoBodyX[i];
-          tempYHippoBody = HippoBodyY[i];
+        var HippoBodyX = [HippoPositionZeroXBody+bodyOffset,HippoPositionZeroXBody,HippoPositionZeroXBody + bodyOffset, HippoPositionHalfXBody,HippoPositionHalfXBody, HippoPositionFullXBody - bodyOffset,HippoPositionFullXBody, HippoPositionFullXBody - bodyOffset]
+        var HippoBodyY = [HippoPositionZeroYBody + bodyOffset, HippoPositionHalfYBody, HippoPositionFullYBody - bodyOffset, HippoPositionZeroYBody, HippoPositionFullYBody ,HippoPositionZeroYBody + bodyOffset, HippoPositionHalfYBody ,HippoPositionFullYBody - bodyOffset]
+
+        tempXHippoBody = HippoBodyX[i];
+        tempYHippoBody = HippoBodyY[i];
 
         tempHippoBody = {
           x: tempXHippoBody,
@@ -89,48 +91,45 @@ $(document).ready(function() {
           nextX: tempXHippoBody,
           nextY: tempYHippoBody,
           radius: tempRadiusHippoBody,
-          speed: tempSpeedHippo,
-          angle: tempAngleHippo,
-          velocityX: tempVelocityXHippo,
-          velocityY: tempVelocityYHippo,
-          mass: tempRadiusHippo
+          speed: tempSpeedHippoBody,
+          angle: tempAngleHippoBody,
+          velocityX: tempVelocityXHippoBody,
+          velocityY: tempVelocityYHippoBody,
+          mass: tempRadiusHippoBody
         };
         placeOK = canStartHere(tempHippoBody);
       }
       HippoBodies.push(tempHippoBody);
     }
 
-
     // Find spots to place each hippo head
     for (var i = 0; i < numHippos; i++) {
-      tempRadiusHippo = 20;
+      tempRadiusHippo = parseInt(width/60);
       var placeOK = false;
       while (!placeOK) {
         tempXHippo = tempRadiusHippo * 3 + (Math.floor(Math.random() * theCanvas.width) - tempRadiusHippo * 3);
         tempYHippo = tempRadiusHippo * 3 + (Math.floor(Math.random() * theCanvas.height) - tempRadiusHippo * 3);
         tempSpeedHippo = 0;
         tempAngleHippo = 0;
-        //Math.floor(Math.random() * 360);
         tempRadiansHippo = 0;
-        //tempAngle * Math.PI/180;
         tempVelocityXHippo = 0;
-        //Math.cos(tempRadians) * tempSpeed;
         tempVelocityYHippo = 0;
-        //Math.sin(tempRadians) * tempSpeed;
         tempHippoCounter = 0;
 
-        var HippoPositionZeroX = 75
+        var headOffset = parseInt(width/10);
+
+        var HippoPositionZeroX = headOffset
         var HippoPositionHalfX = theCanvas.width/2
-        var HippoPositionFullX = theCanvas.width - 75
-        var HippoPositionZeroY = 75
+        var HippoPositionFullX = theCanvas.width - headOffset
+        var HippoPositionZeroY = headOffset
         var HippoPositionHalfY = theCanvas.height/2
-        var HippoPositionFullY = theCanvas.height - 75
+        var HippoPositionFullY = theCanvas.height - headOffset
 
-        var HippoHeadX = [HippoPositionZeroX,HippoPositionZeroX,HippoPositionZeroX,HippoPositionHalfX,HippoPositionHalfX,HippoPositionFullX,HippoPositionFullX,HippoPositionFullX]
-        var HippoHeadY = [HippoPositionZeroY,HippoPositionHalfY,HippoPositionFullY,HippoPositionZeroY,HippoPositionFullY,HippoPositionZeroY,HippoPositionHalfY,HippoPositionFullY]
+        var HippoHeadX = [HippoPositionZeroX, HippoPositionZeroX, HippoPositionZeroX, HippoPositionHalfX, HippoPositionHalfX, HippoPositionFullX, HippoPositionFullX, HippoPositionFullX]
+        var HippoHeadY = [HippoPositionZeroY, HippoPositionHalfY, HippoPositionFullY, HippoPositionZeroY, HippoPositionFullY, HippoPositionZeroY, HippoPositionHalfY, HippoPositionFullY]
 
-          tempXHippo = HippoHeadX[i];
-          tempYHippo = HippoHeadY[i];
+        tempXHippo = HippoHeadX[i];
+        tempYHippo = HippoHeadY[i];
 
         tempHippo = {
           x: tempXHippo,
@@ -152,29 +151,29 @@ $(document).ready(function() {
     }
 
     var generateBall = function () {
-        tempRadius = 5;
-        tempX = tempRadius * 3 + (Math.floor(Math.random() * ((theCanvas.width)/8)+(theCanvas.width)*7/16) - tempRadius * 3);
-        tempY = tempRadius * 3 + (Math.floor(Math.random() * ((theCanvas.height)/8)+(theCanvas.height)*7/16) - tempRadius * 3);
-        tempSpeed = 4;
-        tempAngle = Math.floor(Math.random() * 360);
-        tempRadians = tempAngle * Math.PI/180;
-        tempVelocityX = Math.cos(tempRadians) * tempSpeed;
-        tempVelocityY = Math.sin(tempRadians) * tempSpeed;
+      tempRadius = parseInt(width/240);
+      tempX = tempRadius * 3 + (Math.floor(Math.random() * ((theCanvas.width)/8)+(theCanvas.width)*7/16) - tempRadius * 3);
+      tempY = tempRadius * 3 + (Math.floor(Math.random() * ((theCanvas.height)/8)+(theCanvas.height)*7/16) - tempRadius * 3);
+      tempSpeed = 5;
+      tempAngle = Math.floor(Math.random() * 360);
+      tempRadians = tempAngle * Math.PI/180;
+      tempVelocityX = Math.cos(tempRadians) * tempSpeed;
+      tempVelocityY = Math.sin(tempRadians) * tempSpeed;
 
-        tempBall = {
-          x: tempX,
-          y: tempY,
-          nextX: tempX,
-          nextY: tempY,
-          radius: tempRadius,
-          speed: tempSpeed,
-          angle: tempAngle,
-          velocityX: tempVelocityX,
-          velocityY: tempVelocityY,
-          mass: tempRadius
-        };
-        placeOK = canStartHere(tempBall);
-      }
+      tempBall = {
+        x: tempX,
+        y: tempY,
+        nextX: tempX,
+        nextY: tempY,
+        radius: tempRadius,
+        speed: tempSpeed,
+        angle: tempAngle,
+        velocityX: tempVelocityX,
+        velocityY: tempVelocityY,
+        mass: tempRadius
+      };
+      placeOK = canStartHere(tempBall);
+    }
 
     // Find spots to place each ball so none start on top of each other
     for (var i = 0; i < numBalls; i += 1) {
@@ -189,7 +188,6 @@ $(document).ready(function() {
     // Drawing interval
     setInterval(drawScreen, 33);
 
-    // Functions
     // Returns true if a ball can start at given location, otherwise returns false
     function canStartHere(ball) {
       var retVal = true;
@@ -203,6 +201,7 @@ $(document).ready(function() {
 
     // Circle collision test to see if two balls are touching
     // Uses nextX and nextY to test for collision before it occurs
+    // also using this function for ball vs body and ball vs head
     function hitTestCircle (ball1, ball2) {
       var retVal = false;
       var dx = ball1.nextX - ball2.nextX;
@@ -214,31 +213,33 @@ $(document).ready(function() {
       return retVal;
     }
 
+// try using hitTestCircle for this function with ball1,hippo1 as inputs
 // Test to see if ball collides with hippo
-    var hitHippoBall  = function (ball1,hippo1) {
-      var retVal =false;
-      var dxx = ball1.nextX - hippo1.nextX;
-      var dyy = ball1.nextY - hippo1.nextY;
-      var distance = (dxx * dxx + dyy * dyy);
-      if (distance <= (ball1.radius + hippo1.radius) * (ball1.radius + hippo1.radius) ) {
-        retVal = true;
-      }
-      return retVal;
-    }
+//passed test this function is no longer used
+    // var hitHippoBall  = function (ball1,hippo1) {
+    //   var retVal =false;
+    //   var dxx = ball1.nextX - hippo1.nextX;
+    //   var dyy = ball1.nextY - hippo1.nextY;
+    //   var distance = (dxx * dxx + dyy * dyy);
+    //   if (distance <= (ball1.radius + hippo1.radius) * (ball1.radius + hippo1.radius) ) {
+    //     retVal = true;
+    //   }
+    //   return retVal;
+    // }
 
+// try using hitTestCircle for this function with ball1,hippo1 as inputs
 // Test to see if ball collides with hippo body
-//*****************
-    var hitHippoBodyBall  = function (ball1,hippoBody1) {
-      var retVal =false;
-      var dxx = ball1.nextX - hippoBody1.nextX;
-      var dyy = ball1.nextY - hippoBody1.nextY;
-      var distance = (dxx * dxx + dyy * dyy);
-      if (distance <= (ball1.radius + hippoBody1.radius) * (ball1.radius + hippoBody1.radius) ) {
-        retVal = true;
-      }
-      return retVal;
-    }
-
+//passed test this function is no longer used
+    // var hitHippoBodyBall  = function (ball1,hippoBody1) {
+    //   var retVal =false;
+    //   var dxx = ball1.nextX - hippoBody1.nextX;
+    //   var dyy = ball1.nextY - hippoBody1.nextY;
+    //   var distance = (dxx * dxx + dyy * dyy);
+    //   if (distance <= (ball1.radius + hippoBody1.radius) * (ball1.radius + hippoBody1.radius) ) {
+    //     retVal = true;
+    //   }
+    //   return retVal;
+    // }
 
     // Loops through all the balls in the balls array and updates the nextX and nextY properties
     // with current x and y velocities for each ball
@@ -299,16 +300,16 @@ $(document).ready(function() {
     var collideHippo = function () {
       var ball;
       var Hippo;
-      for (var i = 0; i < balls.length; i += 1) {
+      for (var i = 0; i < balls.length; i++) {
         ball = balls[i];
-        for (var j = 0; j < Hippos.length; j += 1) {
+        for (var j = 0; j < Hippos.length; j++) {
           hippo = Hippos[j];
-          if (hitHippoBall(ball, hippo)) {
+          if (hitTestCircle(ball, hippo)) {
             collideBallsHippo(ball, hippo);
           }
         }
-     }
-   }
+      }
+    }
 
     // Tests whether any balls have hit hippo bodies.
     // Uses two next loops to iterate through the balls array and test each ball against every hippo body.
@@ -319,12 +320,12 @@ $(document).ready(function() {
         ball = balls[i];
         for (var j = 0; j < HippoBodies.length; j += 1) {
           HippoBody = HippoBodies[j];
-          if (hitHippoBodyBall(ball, HippoBody)) {
+          if (hitTestCircle(ball, HippoBody)) {
             collideBallsHippoBody(ball, HippoBody);
           }
         }
-     }
-   }
+      }
+    }
 
     // Updates properties of colliding balls so they appear to bounce off each other.
     // Uses nextX and nextY properties because we don't want to change where they are at the moment.
@@ -351,9 +352,9 @@ $(document).ready(function() {
       /* Uses the following formulas:
            velocity1 = ((mass1 - mass2) * velocity1 + 2*mass2 * velocity2) / (mass1 + mass2)
            velocity2 = ((mass2 - mass1) * velocity2 + 2*mass1 * velocity1) / (mass1 + mass2)
-      */
-      var finalVelocityX1 = ((ball1.mass - ball2.mass) * rotatedVelocityX1 + (ball2.mass + ball2.mass) * rotatedVelocityX2) / (ball1.mass + ball2.mass);
-      var finalVelocityX2 = ((ball1.mass + ball1.mass) * rotatedVelocityX1 + (ball2.mass - ball1.mass) * rotatedVelocityX2) / (ball1.mass + ball2.mass);
+           */
+           var finalVelocityX1 = ((ball1.mass - ball2.mass) * rotatedVelocityX1 + (ball2.mass + ball2.mass) * rotatedVelocityX2) / (ball1.mass + ball2.mass);
+           var finalVelocityX2 = ((ball1.mass + ball1.mass) * rotatedVelocityX1 + (ball2.mass - ball1.mass) * rotatedVelocityX2) / (ball1.mass + ball2.mass);
 
       // Y velocities remain constant
       var finalVelocityY1 = rotatedVelocityY1;
@@ -374,7 +375,6 @@ $(document).ready(function() {
 
     // Updates properties of colliding balls so they appear to bounce off each other.
     // Uses nextX and nextY properties because we don't want to change where they are at the moment.
-    //*************
     function collideBallsHippoBody (ball1, HippoBody) {
       var dx = ball1.nextX - HippoBody.nextX;
       var dy = ball1.nextY - HippoBody.nextY;
@@ -382,11 +382,13 @@ $(document).ready(function() {
 
       // Get velocities of each ball before collision
       var speed1 = Math.sqrt(ball1.velocityX * ball1.velocityX + ball1.velocityY * ball1.velocityY);
-      var speed2 = Math.sqrt(HippoBody.velocityX * HippoBody.velocityX + HippoBody.velocityY * HippoBody.velocityY);
+      var speed2 = 0;
+      //Math.sqrt(HippoBody.velocityX * HippoBody.velocityX + HippoBody.velocityY * HippoBody.velocityY);
 
       // Get angles (in radians) for each ball, given current velocities
       var direction1 = Math.atan2(ball1.velocityY, ball1.velocityX);
-      var direction2 = Math.atan2(HippoBody.velocityY, HippoBody.velocityX);
+      var direction2 = 0;
+      //Math.atan2(HippoBody.velocityY, HippoBody.velocityX);
 
       // Rotate velocity vectors so we can plug into equation for conservation of momentum
       var rotatedVelocityX1 = speed1 * Math.cos(direction1 - collisionAngle);
@@ -398,19 +400,21 @@ $(document).ready(function() {
       /* Uses the following formulas:
            velocity1 = ((mass1 - mass2) * velocity1 + 2*mass2 * velocity2) / (mass1 + mass2)
            velocity2 = ((mass2 - mass1) * velocity2 + 2*mass1 * velocity1) / (mass1 + mass2)
-      */
-      var finalVelocityX1 = ((ball1.mass - HippoBody.mass) * rotatedVelocityX1 + (HippoBody.mass + HippoBody.mass) * rotatedVelocityX2) / (ball1.mass + HippoBody.mass);
-      var finalVelocityX2 = ((ball1.mass + ball1.mass) * rotatedVelocityX1 + (HippoBody.mass - ball1.mass) * rotatedVelocityX2) / (ball1.mass + HippoBody.mass);
+           */
+           var finalVelocityX1 = ((ball1.mass - HippoBody.mass) * rotatedVelocityX1 + (HippoBody.mass + HippoBody.mass) * rotatedVelocityX2) / (ball1.mass + HippoBody.mass);
+           var finalVelocityX2 = ((ball1.mass + ball1.mass) * rotatedVelocityX1 + (HippoBody.mass - ball1.mass) * rotatedVelocityX2) / (ball1.mass + HippoBody.mass);
 
       // Y velocities remain constant
       var finalVelocityY1 = rotatedVelocityY1;
       var finalVelocityY2 = rotatedVelocityY2;
 
       // Rotate angles back again so the collision angle is preserved
-      ball1.velocityX = Math.cos(collisionAngle) * finalVelocityX1 + Math.cos(collisionAngle + Math.PI/2) * finalVelocityY1;
-      ball1.velocityY = Math.sin(collisionAngle) * finalVelocityX1 + Math.sin(collisionAngle + Math.PI/2) * finalVelocityY1;
-      HippoBody.velocityX = Math.cos(collisionAngle) * finalVelocityX2 + Math.cos(collisionAngle + Math.PI/2) * finalVelocityY2;
-      HippoBody.velocityY = Math.sin(collisionAngle) * finalVelocityX2 + Math.sin(collisionAngle + Math.PI/2) * finalVelocityY2;
+      ball1.velocityX = 1.5 * Math.cos(collisionAngle) * finalVelocityX1 + Math.cos(collisionAngle + Math.PI/2) * finalVelocityY1;
+      ball1.velocityY = 1.5 * Math.sin(collisionAngle) * finalVelocityX1 + Math.sin(collisionAngle + Math.PI/2) * finalVelocityY1;
+      HippoBody.velocityX = 0;
+      //Math.cos(collisionAngle) * finalVelocityX2 + Math.cos(collisionAngle + Math.PI/2) * finalVelocityY2;
+      HippoBody.velocityY = 0;
+      //Math.sin(collisionAngle) * finalVelocityX2 + Math.sin(collisionAngle + Math.PI/2) * finalVelocityY2;
 
       // Update nextX and nextY for both balls so we can use them in render() or another collision
       ball1.nextX += ball1.velocityX;
@@ -419,32 +423,31 @@ $(document).ready(function() {
       HippoBody.nextY += HippoBody.velocityY;
     }
 
-
     // Stops the balls.
-var collideBallsHippo = function (ball1, hippo1) {
-        removeBall (ball1);
+    var collideBallsHippo = function (ball1, hippo1) {
+      removeBall (ball1);
     }
 
  //remove ball
-var removeBall = function (ball1) {
+ var removeBall = function (ball1) {
     var removeThisBall = balls.indexOf(ball1);
-      balls.splice(removeThisBall,1)
+    balls.splice(removeThisBall,1)
       ballCount ()
-  }
+}
 
 var ballCount = function () {
-   if (balls.length < numBalls) {
-        addBall ();
-    }
- }
+ if (balls.length < numBalls) {
+  addBall ();
+}
+}
 
 var addBall = function () {
-    generateBall ();
-      balls.push(tempBall);
+  generateBall ();
+  balls.push(tempBall);
 }
 
     // Draws and updates each hippo
-var renderHippo = function () {
+    var renderHippo = function () {
       var Hippo;
       context.fillStyle = "#ff0000";
       for (var i = 0; i < Hippos.length; i++) {
@@ -452,14 +455,14 @@ var renderHippo = function () {
         Hippo.x = Hippo.nextX;
         Hippo.y = Hippo.nextY;
         context.beginPath();
-        context.arc(Hippo.x, Hippo.y, 20, 0, Math.PI *2, true);
+        context.arc(Hippo.x, Hippo.y, Hippo.radius, 0, Math.PI *2, true);
         context.closePath();
         context.fill();
       }
     }
 
     // Draws and updates each hippo Body
-var renderHippoBodies = function () {
+    var renderHippoBodies = function () {
       var HippoBody;
       context.fillStyle = "#ff0000";
       for (var i = 0; i < Hippos.length; i++) {
@@ -467,14 +470,14 @@ var renderHippoBodies = function () {
         HippoBody.x = HippoBody.nextX;
         HippoBody.y = HippoBody.nextY;
         context.beginPath();
-        context.arc(HippoBody.x, HippoBody.y, 50, 0, Math.PI *2, true);
+        context.arc(HippoBody.x, HippoBody.y, HippoBody.radius, 0, Math.PI *2, true);
         context.closePath();
         context.fill();
       }
     }
 
     // Draws and updates each ball
-function renderBall () {
+    function renderBall () {
       var ball;
       context.fillStyle = "#000000";
       for (var i = 0; i < balls.length; i += 1) {
@@ -490,7 +493,7 @@ function renderBall () {
     }
 
     // Draws/updates the screen
-function drawScreen () {
+    function drawScreen () {
       // Reset canvas
       context.fillStyle = "#EEEEEE";
       context.fillRect(0, 0, theCanvas.width, theCanvas.height);
@@ -499,15 +502,14 @@ function drawScreen () {
       context.strokeStyle = "#000000";
       context.strokeRect(1, 1, theCanvas.width - 2, theCanvas.height - 2);
 
-     update();
-     testWalls();
-     collide();
-     collideHippo();
-     collideHippoBodies();
-     renderBall();
-     renderHippo();
-     renderHippoBodies();
-
+      update();
+      testWalls();
+      collide();
+      collideHippo();
+      collideHippoBodies();
+      renderBall();
+      renderHippo();
+      renderHippoBodies();
 
     }
   }

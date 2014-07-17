@@ -4,6 +4,14 @@ $(document).ready(function() {
     return Modernizr.canvas;
   }
 
+document.body.addEventListener('touchmove', function(event) {
+  event.preventDefault();
+}, false);
+
+// if (window.navigator.msPointerEnabled) {
+//   // Pointer events are supported.
+// }
+
   canvasApp();
 
   function canvasApp() {
@@ -16,17 +24,20 @@ $(document).ready(function() {
       // Grab the canvas and set the context to 2d
       var theCanvas = document.getElementById('canvasOne');
       var context = theCanvas.getContext("2d");
-      if (window.innerHeight < window.innerWidth) {
-      theCanvas.width = theCanvas.height = window.innerHeight;
-      } else {
-        theCanvas.width = theCanvas.height = window.innerWidth;
-      }
+       theCanvas.width = window.innerWidth;
+       theCanvas.height = window.innerHeight;
     }
 
   // Variables
-        var width = theCanvas.width;
         var canvasRadius
-          canvasRadius = canvasCenterX = canvasCenterY = width / 2;
+      if (window.innerHeight < window.innerWidth) {
+      canvasRadius = (window.innerHeight / 2) - 50;
+      } else {
+        canvasRadius = (window.innerWidth / 2) - 50;
+      }
+          canvasCenterX = window.innerWidth / 2;
+          canvasCenterY = window.innerHeight / 2;
+        var width = canvasRadius * 2;
         var circleUnit = Math.sqrt(2) / 2;
         var arena = {
           x: canvasCenterX,
@@ -38,7 +49,7 @@ $(document).ready(function() {
           angle: 0,
           velocityX: 0,
           velocityY: 0,
-          mass: canvasRadius
+          mass: 10 * canvasRadius
         };
 
         var numBalls = parseInt(width/36);
@@ -88,15 +99,48 @@ $(document).ready(function() {
         var C3 = new Array();
         var C4 = new Array();
         var C5 = new Array();
-
         var dragonHead = new Array();
         var tempRotation;
 
         imageObj = new Image();
-        imageObj.src = 'images/head.png'; /*dragon head image from http://www.clipartbest.com/clipart-LTKyEBrTa */
 
-        imageObj.onload = function() {
+          var images = new Array();
+          var headImage = new Image();
+          var scaleImage = new Image();
+
+      // preloading all images
+      function loadImages(sources, callback) {
+        var images = {};
+        var loadedImages = 0;
+        var numImages = 0;
+        // get num of sources
+        for(var src in sources) {
+          numImages++;
         }
+        for(var src in sources) {
+          images[src] = new Image();
+          images[src].onload = function() {
+            if(++loadedImages >= numImages) {
+              callback(images);
+            }
+          };
+          images[src].src = sources[src];
+        }
+      }
+
+      var sources = {
+        head: 'images/head.png' /*dragon head image from http://www.clipartbest.com/clipart-LTKyEBrTa */,
+        scales: 'images/scales.jpg' /*scale image from http://funny-quotes.picphotos.net/*/
+      };
+
+      loadImages(sources, function(images) {
+        scaleImage = images.scales;
+        headImage = images.head;
+      });
+
+ //       imageObj.src = 'images/head.png'; /*dragon head image from http://www.clipartbest.com/clipart-LTKyEBrTa */
+        // imageObj.onload = function() {
+        // }
 
       // Find spots to place each hippo body
       for (var i = 0; i < numHippos; i++) {
@@ -380,10 +424,11 @@ $(document).ready(function() {
       for (var i = 0; i < numHippos; i++) {
         var hippo = Hippos[i];
         var tempDragonHead;
-        tempHeadX = hippo.x; // - 69;
-        tempHeadY = hippo.y; // - 82;
-        tempHeadWidth = 273;
-        tempHeadHeight = 298;
+        var sizeRatio = (canvasRadius / 840);
+        tempHeadX = hippo.x;
+        tempHeadY = hippo.y;
+        tempHeadWidth = 273 * sizeRatio;
+        tempHeadHeight = 298 * sizeRatio;
         tempRotation = (- Math.PI / 2) - i * (Math.PI * 2) / numHippos;
 
         tempDragonHead = {
@@ -568,7 +613,7 @@ $(document).ready(function() {
       }
     }
 
-    // Tests whether any balls have hit hheads.
+    // Tests whether any balls have hit heads.
     var collideHippo = function () {
       var ball;
       var Hippo;
@@ -803,18 +848,19 @@ $(document).ready(function() {
 
           for (i = 0; i < numHippos; i++) {
             headdragon = dragonHead[i];
-            headX = headdragon.HeadX;
-            headY = headdragon.HeadY;
-            headWidth = headdragon.HeadWidth * 0.5;
-            headHeight = headdragon.HeadHeight * 0.5;
+            hippo = Hippos[i];
+            headX = hippo.x;
+            headY = hippo.y;
+            headWidth = headdragon.HeadWidth;
+            headHeight = headdragon.HeadHeight;
             headRotate = headdragon.Rotation;
 
             context.save();
             context.translate(headX, headY)
             context.rotate(headRotate);
-            context.translate(-69, -82);
+            context.translate((- headWidth / 2), (- headHeight / 2));
 
-            context.drawImage(imageObj, 0, 0, headWidth, headHeight);
+            context.drawImage(headImage, 0, 0, headWidth, headHeight);
             context.restore();
 
           };
@@ -831,6 +877,8 @@ $(document).ready(function() {
             HippoBody.y = HippoBody.nextY;
             context.beginPath();
             context.arc(HippoBody.x, HippoBody.y, HippoBody.radius, 0, Math.PI *2, true);
+
+            // context.fillStyle = context.createPattern(scaleImage, 'repeat');
 
             // var imageObj = new Image();
             // imageObj.onload = function() {
@@ -980,16 +1028,120 @@ $(document).ready(function() {
       collideHippo();
       renderBall();
       renderHippoBodies();
-      renderAtlas();
-      renderAxis();
-      renderC3();
-      renderC4();
       renderC5();
+      renderC4();
+      renderC3();
+      renderAxis();
+      renderAtlas();
       renderHippo();
       renderDragonHead();
       borderClear();
 
 }
+var Canvas = document.getElementById('canvasOne')
+
+//Handle Touch and Move
+Canvas.addEventListener("touchstart", touchHandler, false);
+
+//Verify if point was within the bounds of an actual hippo
+function touchHandler (event) {
+
+  // var touches = event.changedTouches;
+  var touches = event.changedTouches;
+
+  for (j = 0; j < touches.length; j++) {
+    for (var i = 0; i < numHippos; i++) {
+        var hippo = Hippos[i];
+        var hippoBody = HippoBodies[i];
+        var touchEvent = event.touches[j];
+        if (hippoHit(hippo, touchEvent)) {
+Canvas.addEventListener("touchmove", moveTheHippoHandler(hippo, hippoBody, touchEvent.identifier), false);
+Canvas.addEventListener("touchend", touchRelease(hippo, hippoBody, touchEvent.identifier), false);
+       }
+    }
+  }
+};
+
+    //Verify pixels clicked by pointer are within bounds of a hippo head
+    var hippoHit = function(hippo, touchEvent) {
+      var hippoX = hippo.x;
+      var hippoY = hippo.y;
+      var radius = hippo.radius;
+
+      x = touchEvent.clientX;
+      y = touchEvent.clientY;
+
+    	var minX = hippoX - radius;
+      var maxX = hippoX + radius;
+      var minY = hippoY - radius;
+    	var maxY = hippoY + radius;
+        if (x >= minX && x <= maxX && y >= minY && y <= maxY) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+
+
+   //moving the head
+   function moveTheHippoHandler (hippo, hippoBody, touchId) {
+    var f1 = function (event) {
+      var touches = event.changedTouches;
+      for (j = 0; j < touches.length; j++) {
+        if (touches[j].identifier == touchId)
+        hippo.nextX = event.touches[j].clientX;
+        hippo.nextY = event.touches[j].clientY;
+         if (neckLength (hippo, hippoBody)) {
+          console.log('good neck length');
+        }
+        else {
+          console.log('neck TOO long');
+          hippo.nextX = hippo.x;
+          hippo.nextY = hippo.y;
+        }
+      }
+    }
+    return f1;
+  }
+
+//*************
+
+    // check head to body distance
+    var neckLength = function (hippo, hippoBody) {
+       for (i = 0; i < numHippos; i++) {
+        // hippo = Hippos[i];
+        // hippoBody = HippoBodies[i];
+        dX = hippo.nextX - hippoBody.x;
+        dY = hippo.nextY - hippoBody.y;
+        dist = (dX * dX) + (dY * dY);
+
+        if (headOffset * headOffset >= dist) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+
+
+   function touchRelease (hippo, hippoBody, touchId) {
+    var f1 = function (event) {
+      var touches = event.changedTouches;
+      for (j = 0; j < touches.length; j++) {
+        if (touches[j].identifier == touchId)
+          console.log('end touch');
+        }
+
+      }
+    return f1;
+  }
+
+
+
+
+//end
 }
 
 });

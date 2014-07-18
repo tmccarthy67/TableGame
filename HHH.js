@@ -526,6 +526,39 @@ document.body.addEventListener('touchmove', function(event) {
       }
     }
 
+    // Loops through all the vertebra and updates the nextX and nextY
+    function updateVert() {
+      for (var i = 0; i < numHippos; i += 1) {
+        var hippo = Hippos[i];
+        var hippoBodies = HippoBodies[i];
+        var AtlasC1 = Atlas[i];
+        var AxisC2 = Axis[i];
+        var vertC3 = C3[i];
+        var vertC4 = C4[i];
+        var vertC5 = C5[i];
+
+        var vertXmod = (hippoBodies.x - hippo.x) / vertModifier;
+        var vertYmod = (hippoBodies.y - hippo.y) / vertModifier;
+
+        AtlasC1.nextX = hippo.x + vertXmod;
+        AtlasC1.nextY = hippo.y + vertYmod;
+
+        AxisC2.nextX = AtlasC1.x + vertXmod;
+        AxisC2.nextY = AtlasC1.y + vertYmod;
+
+        vertC3.nextX = AxisC2.x + vertXmod;
+        vertC3.nextY = AxisC2.y + vertYmod;
+
+        vertC4.nextX = vertC3.x + vertXmod;
+        vertC4.nextY = vertC3.y + vertYmod;
+
+        vertC5.nextX = vertC4.x + vertXmod;
+        vertC5.nextY = vertC4.y + vertYmod;
+
+      }
+    }
+
+
     // Test ball vs wall
     var testWalls = function () {
       var ball;
@@ -873,8 +906,8 @@ document.body.addEventListener('touchmove', function(event) {
           context.fillStyle = "#3BAF1F";
           for (var i = 0; i < Hippos.length; i++) {
             HippoBody = HippoBodies[i];
-            HippoBody.x = HippoBody.nextX;
-            HippoBody.y = HippoBody.nextY;
+            HippoBody.x = HippoBody.x;
+            HippoBody.y = HippoBody.y;
             context.beginPath();
             context.arc(HippoBody.x, HippoBody.y, HippoBody.radius, 0, Math.PI *2, true);
 
@@ -899,6 +932,8 @@ document.body.addEventListener('touchmove', function(event) {
           context.fillStyle = "#3BAF1F";
           for (var i = 0; i < Hippos.length; i++) {
             AtlasC1 = Atlas[i];
+            AtlasC1.x = AtlasC1.nextX;
+            AtlasC1.y = AtlasC1.nextY;
             context.beginPath();
             context.arc(AtlasC1.x, AtlasC1.y, AtlasC1.radius, 0, Math.PI *2, true);
             context.closePath();
@@ -912,6 +947,8 @@ document.body.addEventListener('touchmove', function(event) {
           context.fillStyle = "#3BAF1F";
           for (var i = 0; i < Hippos.length; i++) {
             AxisC2 = Axis[i];
+            AxisC2.x = AxisC2.nextX;
+            AxisC2.y = AxisC2.nextY;
             context.beginPath();
             context.arc(AxisC2.x, AxisC2.y, AxisC2.radius, 0, Math.PI *2, true);
             context.closePath();
@@ -925,6 +962,8 @@ document.body.addEventListener('touchmove', function(event) {
           context.fillStyle = "#3BAF1F";
           for (var i = 0; i < Hippos.length; i++) {
             vertC3 = C3[i];
+            vertC3.x = vertC3.nextX;
+            vertC3.y = vertC3.nextY;
             context.beginPath();
             context.arc(vertC3.x, vertC3.y, vertC3.radius, 0, Math.PI *2, true);
             context.closePath();
@@ -938,6 +977,8 @@ document.body.addEventListener('touchmove', function(event) {
           context.fillStyle = "#3BAF1F";
           for (var i = 0; i < Hippos.length; i++) {
             vertC4 = C4[i];
+            vertC4.x = vertC4.nextX;
+            vertC4.y = vertC4.nextY;
             context.beginPath();
             context.arc(vertC4.x, vertC4.y, vertC4.radius, 0, Math.PI *2, true);
             context.closePath();
@@ -951,6 +992,8 @@ document.body.addEventListener('touchmove', function(event) {
           context.fillStyle = "#3BAF1F";
           for (var i = 0; i < Hippos.length; i++) {
             vertC5 = C5[i];
+            vertC5.x = vertC5.nextX;
+            vertC5.y = vertC5.nextY;
             context.beginPath();
             context.arc(vertC5.x, vertC5.y, vertC5.radius, 0, Math.PI *2, true);
             context.closePath();
@@ -1016,6 +1059,7 @@ document.body.addEventListener('touchmove', function(event) {
     }
 
       update();
+      updateVert();
       testWalls();
       testBallLocation();
       collide();
@@ -1087,10 +1131,12 @@ Canvas.addEventListener("touchend", touchRelease(hippo, hippoBody, touchEvent.id
 
    //moving the head
    function moveTheHippoHandler (hippo, hippoBody, touchId) {
+    var thisTouch = touchId;
+    console.log('touch move');
     var f1 = function (event) {
       var touches = event.changedTouches;
       for (j = 0; j < touches.length; j++) {
-        if (touches[j].identifier == touchId)
+        if (touches[j].identifier == thisTouch)
         hippo.nextX = event.touches[j].clientX;
         hippo.nextY = event.touches[j].clientY;
          if (neckLength (hippo, hippoBody)) {

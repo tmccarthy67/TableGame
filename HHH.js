@@ -91,7 +91,7 @@ document.body.addEventListener('touchmove', function(event) {
 
         var headOffset = parseInt(width/5);
         var vertNum = 5;
-        var vertModifier = vertNum + 1;
+        var vertModifier = vertNum + 2;
 
         //Vetebrea
         var Atlas = new Array();
@@ -130,17 +130,13 @@ document.body.addEventListener('touchmove', function(event) {
 
       var sources = {
         head: 'images/head.png' /*dragon head image from http://www.clipartbest.com/clipart-LTKyEBrTa */,
-        scales: 'images/scales.jpg' /*scale image from http://funny-quotes.picphotos.net/*/
+        scales: 'images/scales.png' /*scale image from http://funny-quotes.picphotos.net/*/
       };
 
       loadImages(sources, function(images) {
         scaleImage = images.scales;
         headImage = images.head;
       });
-
- //       imageObj.src = 'images/head.png'; /*dragon head image from http://www.clipartbest.com/clipart-LTKyEBrTa */
-        // imageObj.onload = function() {
-        // }
 
       // Find spots to place each hippo body
       for (var i = 0; i < numHippos; i++) {
@@ -505,19 +501,19 @@ document.body.addEventListener('touchmove', function(event) {
         return retVal;
       }
 
-      // Collision test ball vs wall
-      function hitBallWall (ball1, wall) {
-        var retVal = false;
-        var dx = ball1.nextX - wall.nextX;
-        var dy = ball1.nextY - wall.nextY;
-        var distance = (dx * dx + dy * dy);
-        if (distance > (ball1.radius - wall.radius) * (ball1.radius - wall.radius) ) {
-          retVal = true;
-        }
-        return retVal;
+  // Collision test ball vs wall
+    function hitBallWall (ball1, wall) {
+      var retVal = false;
+      var dx = ball1.nextX - wall.nextX;
+      var dy = ball1.nextY - wall.nextY;
+      var distance = (dx * dx + dy * dy);
+      if (distance > (ball1.radius - wall.radius) * (ball1.radius - wall.radius) ) {
+        retVal = true;
       }
+      return retVal;
+    }
 
-    // Loops through all the balls and updates the nextX and nextY
+  // Loops through all the balls and updates the nextX and nextY
     function update() {
       for (var i = 0; i < balls.length; i += 1) {
         ball = balls[i];
@@ -526,7 +522,7 @@ document.body.addEventListener('touchmove', function(event) {
       }
     }
 
-    // Loops through all the vertebra and updates the nextX and nextY
+  // Loops through all the vertebra and updates the nextX and nextY
     function updateVert() {
       for (var i = 0; i < numHippos; i += 1) {
         var hippo = Hippos[i];
@@ -559,7 +555,7 @@ document.body.addEventListener('touchmove', function(event) {
     }
 
 
-    // Test ball vs wall
+  // Test ball vs wall
     var testWalls = function () {
       var ball;
       var floor;
@@ -572,7 +568,7 @@ document.body.addEventListener('touchmove', function(event) {
       }
     }
 
-    // tests to make sure that ball is still in play
+  // tests to make sure that ball is still in play
     var testBallLocation = function () {
       var ball;
       for (i = 0; i < balls.length; i++) {
@@ -586,7 +582,7 @@ document.body.addEventListener('touchmove', function(event) {
       }
     }
 
-    // Updates properties of colliding ball and wall.
+  // Updates properties of colliding ball and wall.
     function collideBallWall (ball1, wall) {
       var dx = ball1.nextX - wall.nextX;
       var dy = ball1.nextY - wall.nextY;
@@ -631,7 +627,7 @@ document.body.addEventListener('touchmove', function(event) {
       wall.nextY += wall.velocityY;
     }
 
-    // Tests whether any balls have hit each other.
+  // Tests whether any balls have hit each other.
     function collide () {
       var ball;
       var testBall;
@@ -646,7 +642,7 @@ document.body.addEventListener('touchmove', function(event) {
       }
     }
 
-    // Tests whether any balls have hit heads.
+  // Tests whether any balls have hit heads.
     var collideHippo = function () {
       var ball;
       var Hippo;
@@ -661,7 +657,7 @@ document.body.addEventListener('touchmove', function(event) {
       }
     }
 
-    // Tests whether any balls have hit hippo bodies.
+  // Tests whether any balls have hit hippo bodies.
     var collideHippoBodies = function () {
       var ball;
       var HippoBody;
@@ -676,7 +672,7 @@ document.body.addEventListener('touchmove', function(event) {
       }
     }
 
-    // Tests whether any balls have hit atlas.
+  // Tests whether any balls have hit atlas.
     var collideAtlas = function () {
       var ball;
       var atlas;
@@ -691,7 +687,7 @@ document.body.addEventListener('touchmove', function(event) {
       }
     }
 
-    // Tests whether any balls have hit axis.
+  // Tests whether any balls have hit axis.
     var collideAxis = function () {
       var ball;
       var axis;
@@ -706,7 +702,7 @@ document.body.addEventListener('touchmove', function(event) {
       }
     }
 
-    // Tests whether any balls have hit C3.
+  // Tests whether any balls have hit C3.
     var collideC3 = function () {
       var ball;
       var c3;
@@ -721,7 +717,7 @@ document.body.addEventListener('touchmove', function(event) {
       }
     }
 
-    // Tests whether any balls have hit C4.
+  // Tests whether any balls have hit C4.
     var collideC4 = function () {
       var ball;
       var c4;
@@ -736,7 +732,7 @@ document.body.addEventListener('touchmove', function(event) {
       }
     }
 
-    // Tests whether any balls have hit C5.
+  // Tests whether any balls have hit C5.
     var collideC5 = function () {
       var ball;
       var c5;
@@ -752,7 +748,7 @@ document.body.addEventListener('touchmove', function(event) {
     }
 
 
-    // Updates colliding balls so they appear to bounce off each other.
+  // Updates colliding balls so they appear to bounce off each other.
     function collideBalls (ball1, ball2) {
       var dx = ball1.nextX - ball2.nextX;
       var dy = ball1.nextY - ball2.nextY;
@@ -797,7 +793,7 @@ document.body.addEventListener('touchmove', function(event) {
       ball2.nextY += ball2.velocityY;
     }
 
-    // Updates colliding balls so they appear to bounce off hippo body.
+  // Updates colliding balls so they appear to bounce off hippo body.
     function collideBallsHippoBody (ball1, HippoBody) {
       var dx = ball1.nextX - HippoBody.nextX;
       var dy = ball1.nextY - HippoBody.nextY;
@@ -842,166 +838,156 @@ document.body.addEventListener('touchmove', function(event) {
       HippoBody.nextY += HippoBody.velocityY;
     }
 
-     //remove ball
+  //remove ball
     var removeBall = function (ball1) {
       var removeThisBall = balls.indexOf(ball1);
       balls.splice(removeThisBall,1)
       ballCount ()
     }
 
+  // Checks to see if number of balls is high enough
     var ballCount = function () {
       if (balls.length < numBalls) {
         addBall ();
       }
     }
 
+  // Adds balls to balls Array
     var addBall = function () {
       generateBall ();
       balls.push(tempBall);
     }
 
-        // Draws and updates each hippo
-        var renderHippo = function () {
-          var Hippo;
-          context.fillStyle = "#3BAF1F";
-          for (i = 0; i < Hippos.length; i++) {
-            Hippo = Hippos[i];
-            Hippo.x = Hippo.nextX;
-            Hippo.y = Hippo.nextY;
-            context.beginPath();
-            context.arc(Hippo.x, Hippo.y, Hippo.radius, 0, Math.PI *2, true);
-            context.closePath();
-            context.fill();
-          }
-        }
+  // Draws and updates each hippo
+    var renderHippo = function () {
+      var Hippo;
+      context.fillStyle = "#307630";
+      for (i = 0; i < Hippos.length; i++) {
+        Hippo = Hippos[i];
+        Hippo.x = Hippo.nextX;
+        Hippo.y = Hippo.nextY;
+        context.beginPath();
+        context.arc(Hippo.x, Hippo.y, Hippo.radius, 0, Math.PI *2, true);
+        context.closePath();
+        context.fill();
+      }
+    }
 
-        //Add dragon to head
-        var renderDragonHead = function () {
-          var headdragon;
+  //Add dragon to head
+    var renderDragonHead = function () {
+      var headdragon;
 
-          for (i = 0; i < numHippos; i++) {
-            headdragon = dragonHead[i];
-            hippo = Hippos[i];
-            headX = hippo.x;
-            headY = hippo.y;
-            headWidth = headdragon.HeadWidth;
-            headHeight = headdragon.HeadHeight;
-            headRotate = headdragon.Rotation;
+      for (i = 0; i < numHippos; i++) {
+        headdragon = dragonHead[i];
+        hippo = Hippos[i];
+        headX = hippo.x;
+        headY = hippo.y;
+        headWidth = headdragon.HeadWidth;
+        headHeight = headdragon.HeadHeight;
+        headRotate = headdragon.Rotation;
 
-            context.save();
-            context.translate(headX, headY)
-            context.rotate(headRotate);
-            context.translate((- headWidth / 2), (- headHeight / 2));
+        context.save();
+        context.translate(headX, headY)
+        context.rotate(headRotate);
+        context.translate((- headWidth / 2), (- headHeight / 2));
 
-            context.drawImage(headImage, 0, 0, headWidth, headHeight);
-            context.restore();
+        context.drawImage(headImage, 0, 0, headWidth, headHeight);
+        context.restore();
 
-          };
-        }
+      };
+    }
 
-        //*******
-        // Draws and updates each hippo Body
-        var renderHippoBodies = function () {
-          var HippoBody;
-          context.fillStyle = "#3BAF1F";
-          for (var i = 0; i < Hippos.length; i++) {
-            HippoBody = HippoBodies[i];
-            HippoBody.x = HippoBody.x;
-            HippoBody.y = HippoBody.y;
-            context.beginPath();
-            context.arc(HippoBody.x, HippoBody.y, HippoBody.radius, 0, Math.PI *2, true);
+  // Draws and updates each hippo Body
+    var renderHippoBodies = function () {
+      var HippoBody;
+      context.fillStyle = "#3BAF1F";
+      for (var i = 0; i < Hippos.length; i++) {
+        HippoBody = HippoBodies[i];
+        HippoBody.x = HippoBody.x;
+        HippoBody.y = HippoBody.y;
+        context.beginPath();
+        context.arc(HippoBody.x, HippoBody.y, HippoBody.radius, 0, Math.PI *2, true);
+        context.closePath();
+        context.fill();
+      }
+    }
 
-            // context.fillStyle = context.createPattern(scaleImage, 'repeat');
+  // Draws and updates Atlas
+    var renderAtlas = function () {
+      var AtlasC1;
+      context.fillStyle = "#3BAF1F";
+      for (var i = 0; i < Hippos.length; i++) {
+        AtlasC1 = Atlas[i];
+        AtlasC1.x = AtlasC1.nextX;
+        AtlasC1.y = AtlasC1.nextY;
+        context.beginPath();
+        context.arc(AtlasC1.x, AtlasC1.y, AtlasC1.radius, 0, Math.PI *2, true);
+        context.closePath();
+        context.fill();
+      }
+    }
 
-            // var imageObj = new Image();
-            // imageObj.onload = function() {
-            //   var pattern = context.createPattern(imageObj, 'repeat');
-            //   context.fillStyle = pattern;
-            //   context.fill();
-            // };
-            // imageObj.src = 'scales.jpg';
+  // Draws and updates Axis
+    var renderAxis = function () {
+      var AxisC2;
+      context.fillStyle = "#3BAF1F";
+      for (var i = 0; i < Hippos.length; i++) {
+        AxisC2 = Axis[i];
+        AxisC2.x = AxisC2.nextX;
+        AxisC2.y = AxisC2.nextY;
+        context.beginPath();
+        context.arc(AxisC2.x, AxisC2.y, AxisC2.radius, 0, Math.PI *2, true);
+        context.closePath();
+        context.fill();
+      }
+    }
 
-            context.closePath();
-            context.fill();
-          }
-        }
+  // Draws and updates C3
+    var renderC3 = function () {
+      var vertC3;
+      context.fillStyle = "#3BAF1F";
+      for (var i = 0; i < Hippos.length; i++) {
+        vertC3 = C3[i];
+        vertC3.x = vertC3.nextX;
+        vertC3.y = vertC3.nextY;
+        context.beginPath();
+        context.arc(vertC3.x, vertC3.y, vertC3.radius, 0, Math.PI *2, true);
+        context.closePath();
+        context.fill();
+      }
+    }
 
-    // Draws and updates Atlas
-        var renderAtlas = function () {
-          var AtlasC1;
-          context.fillStyle = "#3BAF1F";
-          for (var i = 0; i < Hippos.length; i++) {
-            AtlasC1 = Atlas[i];
-            AtlasC1.x = AtlasC1.nextX;
-            AtlasC1.y = AtlasC1.nextY;
-            context.beginPath();
-            context.arc(AtlasC1.x, AtlasC1.y, AtlasC1.radius, 0, Math.PI *2, true);
-            context.closePath();
-            context.fill();
-          }
-        }
+  // Draws and updates C4
+    var renderC4 = function () {
+      var vertC4;
+      context.fillStyle = "#3BAF1F";
+      for (var i = 0; i < Hippos.length; i++) {
+        vertC4 = C4[i];
+        vertC4.x = vertC4.nextX;
+        vertC4.y = vertC4.nextY;
+        context.beginPath();
+        context.arc(vertC4.x, vertC4.y, vertC4.radius, 0, Math.PI *2, true);
+        context.closePath();
+        context.fill();
+      }
+    }
 
-    // Draws and updates Axis
-        var renderAxis = function () {
-          var AxisC2;
-          context.fillStyle = "#3BAF1F";
-          for (var i = 0; i < Hippos.length; i++) {
-            AxisC2 = Axis[i];
-            AxisC2.x = AxisC2.nextX;
-            AxisC2.y = AxisC2.nextY;
-            context.beginPath();
-            context.arc(AxisC2.x, AxisC2.y, AxisC2.radius, 0, Math.PI *2, true);
-            context.closePath();
-            context.fill();
-          }
-        }
+  // Draws and updates C5
+    var renderC5 = function () {
+      var vertC5;
+      context.fillStyle = "#3BAF1F";
+      for (var i = 0; i < Hippos.length; i++) {
+        vertC5 = C5[i];
+        vertC5.x = vertC5.nextX;
+        vertC5.y = vertC5.nextY;
+        context.beginPath();
+        context.arc(vertC5.x, vertC5.y, vertC5.radius, 0, Math.PI *2, true);
+        context.closePath();
+        context.fill();
+      }
+    }
 
-    // Draws and updates C3
-        var renderC3 = function () {
-          var vertC3;
-          context.fillStyle = "#3BAF1F";
-          for (var i = 0; i < Hippos.length; i++) {
-            vertC3 = C3[i];
-            vertC3.x = vertC3.nextX;
-            vertC3.y = vertC3.nextY;
-            context.beginPath();
-            context.arc(vertC3.x, vertC3.y, vertC3.radius, 0, Math.PI *2, true);
-            context.closePath();
-            context.fill();
-          }
-        }
-
-    // Draws and updates C4
-        var renderC4 = function () {
-          var vertC4;
-          context.fillStyle = "#3BAF1F";
-          for (var i = 0; i < Hippos.length; i++) {
-            vertC4 = C4[i];
-            vertC4.x = vertC4.nextX;
-            vertC4.y = vertC4.nextY;
-            context.beginPath();
-            context.arc(vertC4.x, vertC4.y, vertC4.radius, 0, Math.PI *2, true);
-            context.closePath();
-            context.fill();
-          }
-        }
-
-    // Draws and updates C5
-        var renderC5 = function () {
-          var vertC5;
-          context.fillStyle = "#3BAF1F";
-          for (var i = 0; i < Hippos.length; i++) {
-            vertC5 = C5[i];
-            vertC5.x = vertC5.nextX;
-            vertC5.y = vertC5.nextY;
-            context.beginPath();
-            context.arc(vertC5.x, vertC5.y, vertC5.radius, 0, Math.PI *2, true);
-            context.closePath();
-            context.fill();
-          }
-        }
-
-    // Draws and updates each ball
+  // Draws and updates each ball
     function renderBall () {
       var ball;
       context.fillStyle = "#000000";
@@ -1017,7 +1003,7 @@ document.body.addEventListener('touchmove', function(event) {
       }
     }
 
-    // Draws/updates the screen
+  // Draws/updates the screen
     function drawScreen () {
       // Reset canvas
       var canvasReset = function () {
@@ -1027,7 +1013,7 @@ document.body.addEventListener('touchmove', function(event) {
 
     canvasReset();
 
-    // Reset Play Area
+  // Reset Play Area
     var playAreaReset = function () {
       context.beginPath();
       context.arc(canvasCenterX, canvasCenterY, canvasRadius - 1, 0, Math.PI * 2, true);
@@ -1037,7 +1023,7 @@ document.body.addEventListener('touchmove', function(event) {
 
       playAreaReset ();
 
-      // Outside border
+  // Outside border
     var borderReset = function () {
       context.beginPath();
       context.arc(canvasCenterX, canvasCenterY, canvasRadius, 0, Math.PI * 2, true);
@@ -1048,7 +1034,7 @@ document.body.addEventListener('touchmove', function(event) {
 
       borderReset();
 
-      // Outside
+  // Outside
     var borderClear = function () {
       borderSize = width * circleUnit
       context.beginPath();
@@ -1082,29 +1068,133 @@ document.body.addEventListener('touchmove', function(event) {
       borderClear();
 
 }
-var Canvas = document.getElementById('canvasOne')
 
-//Handle Touch and Move
-Canvas.addEventListener("touchstart", touchHandler, false);
+//*********
 
-//Verify if point was within the bounds of an actual hippo
-function touchHandler (event) {
+//close button
+function exitApplication() {
+var x=window.confirm("Are you sure you want to quit?")
+if (x)
+window.close();
+else
+window.alert("Too bad")
+// window.close()
+}
 
-  // var touches = event.changedTouches;
-  var touches = event.changedTouches;
+$(function() {
 
-  for (j = 0; j < touches.length; j++) {
-    for (var i = 0; i < numHippos; i++) {
-        var hippo = Hippos[i];
-        var hippoBody = HippoBodies[i];
-        var touchEvent = event.touches[j];
-        if (hippoHit(hippo, touchEvent)) {
-Canvas.addEventListener("touchmove", moveTheHippoHandler(hippo, hippoBody, touchEvent.identifier), false);
-Canvas.addEventListener("touchend", touchRelease(hippo, hippoBody, touchEvent.identifier), false);
-       }
+  $("#exit").on("click", function(e) {
+    exitApplication();
+  });
+
+  $("#exit a").on("click", function(e) {
+    e.stopPropagation();
+  });
+
+  $(document).keyup(function(e) {
+    if (e.keyCode == 27) { // escape key
+      exitApplication();
+    }
+  });
+
+});
+
+
+//touchevent handling
+
+//global variable to keep track of ongoing touches
+var ongoingTouches = {};
+
+
+$(function() {
+    var el = document.getElementById("canvasOne");
+    el.addEventListener("touchstart", handleTouchStart, false);
+    el.addEventListener("touchend", handleTouchEnd, false);
+    el.addEventListener("touchcancel", handleTouchCancel, false);
+    el.addEventListener("touchleave", handleTouchEnd, false);
+    el.addEventListener("touchmove", handleTouchMove, false);
+});
+
+
+function handleTouchStart(evt) {
+    var touches = evt.changedTouches;
+    for (var i = 0; i < touches.length; i++) {
+
+        var touchId = touches[i].identifier;
+        var touchData = {
+            identifier: touches[i].identifier,
+            clientX: touches[i].clientX,
+            clientY: touches[i].clientY,
+            hippo: null
+        };
+
+    for (var j = 0; j < numHippos; j++) {
+        var hippo = Hippos[j];
+        var hippoBody = HippoBodies[j];
+        if (hippoHit(hippo, touches[i])) {
+          touchData.hippo = j
+        }
+
+        ongoingTouches[touchId] = touchData;
+        evt.preventDefault();
     }
   }
-};
+}
+
+function handleTouchMove(evt) {
+  var touches = evt.changedTouches;
+  for (var i = 0; i < touches.length; i++) {
+
+    var touchId = touches[i].identifier;
+    var touchData = ongoingTouches[touchId];
+
+    if (touchData) {
+      touchData.clientX = touches[i].clientX;
+      touchData.clientY = touches[i].clientY;
+
+      if (touchData.hippo != null) {
+         var hippo = Hippos[touchData.hippo];
+         var hippoBody = HippoBodies[touchData.hippo];
+        hippo.nextX = touches[i].clientX;
+        hippo.nextY = touches[i].clientY;
+        if (neckLength (hippo, hippoBody)) {
+        }
+        else {
+          hippo.nextX = hippo.x;
+          hippo.nextY = hippo.y;
+        }
+      }
+
+
+    } else {
+    }
+    evt.preventDefault();
+  }
+}
+
+function handleTouchEnd(evt) {
+    var touches = evt.changedTouches;
+    for (var i = 0; i < touches.length; i++) {
+
+        var touchId = touches[i].identifier;
+        var touchData = ongoingTouches[touchId];
+
+        if (touchData) {
+            ongoingTouches[touchId] = false;
+        } else {
+        }
+        evt.preventDefault();
+    }
+}
+
+function handleTouchCancel(evt) {
+    var touches = evt.changedTouches;
+    for (var i = 0; i < touches.length; i++) {
+        var touchId = touches[i].identifier;
+        ongoingTouches[touchId] = false;
+    }
+    evt.preventDefault();
+}
 
     //Verify pixels clicked by pointer are within bounds of a hippo head
     var hippoHit = function(hippo, touchEvent) {
@@ -1128,64 +1218,25 @@ Canvas.addEventListener("touchend", touchRelease(hippo, hippoBody, touchEvent.id
 
     }
 
-
-   //moving the head
-   function moveTheHippoHandler (hippo, hippoBody, touchId) {
-    var thisTouch = touchId;
-    console.log('touch move');
-    var f1 = function (event) {
-      var touches = event.changedTouches;
-      for (j = 0; j < touches.length; j++) {
-        if (touches[j].identifier == thisTouch)
-        hippo.nextX = event.touches[j].clientX;
-        hippo.nextY = event.touches[j].clientY;
-         if (neckLength (hippo, hippoBody)) {
-          console.log('good neck length');
-        }
-        else {
-          console.log('neck TOO long');
-          hippo.nextX = hippo.x;
-          hippo.nextY = hippo.y;
-        }
-      }
-    }
-    return f1;
-  }
-
-//*************
-
     // check head to body distance
     var neckLength = function (hippo, hippoBody) {
        for (i = 0; i < numHippos; i++) {
-        // hippo = Hippos[i];
-        // hippoBody = HippoBodies[i];
+
         dX = hippo.nextX - hippoBody.x;
         dY = hippo.nextY - hippoBody.y;
         dist = (dX * dX) + (dY * dY);
 
-        if (headOffset * headOffset >= dist) {
+        dXa = hippo.nextX - canvasCenterX;
+        dYa = hippo.nextY - canvasCenterY;
+        distA = (dXa * dXa) + (dYa * dYa);
+
+        if (headOffset * headOffset >= dist && distA <= canvasRadius *canvasRadius) {
           return true;
         } else {
           return false;
         }
       }
     }
-
-
-   function touchRelease (hippo, hippoBody, touchId) {
-    var f1 = function (event) {
-      var touches = event.changedTouches;
-      for (j = 0; j < touches.length; j++) {
-        if (touches[j].identifier == touchId)
-          console.log('end touch');
-        }
-
-      }
-    return f1;
-  }
-
-
-
 
 //end
 }
